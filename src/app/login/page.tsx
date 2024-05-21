@@ -20,11 +20,23 @@ export default async function Login() {
       <form className="flex flex-col space-y-5" action={handleLogin}>
         <div className="flex flex-col space-y-2">
           <label htmlFor="email">Email</label>
-          <input id="email" className="text-black" type="email" name="email" required />
+          <input
+            id="email"
+            className="text-black"
+            type="email"
+            name="email"
+            required
+          />
         </div>
         <div className="flex flex-col space-y-2">
           <label htmlFor="password">Password</label>
-          <input id="password" className="text-black" type="password" name="password" required />
+          <input
+            id="password"
+            className="text-black"
+            type="password"
+            name="password"
+            required
+          />
         </div>
         <button type="submit">Login</button>
       </form>
