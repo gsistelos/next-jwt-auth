@@ -1,9 +1,10 @@
 import { prisma } from "@/db";
+import { hashPassword } from "@/lib/password";
 
 export async function createUser(formData: FormData) {
   const username = formData.get("username") as string;
   const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
+  const password = hashPassword(formData.get("password") as string);
 
   return await prisma.user.create({
     data: {

@@ -2,6 +2,7 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { getUserByEmail } from "@/actions/user";
+import { comparePasswords } from "@/lib/password";
 
 const jwtSecret = new TextEncoder().encode(process.env.JWT_SECRET);
 
@@ -28,7 +29,7 @@ export async function login(formData: FormData) {
 
   const user = await getUserByEmail(email);
 
-  if (!user || user.password !== password) {
+  if (!user || !comparePasswords(password, user.password)) {
     throw new Error("Invalid email or password");
   }
 
