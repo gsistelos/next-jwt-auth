@@ -1,22 +1,28 @@
-import { getUsers } from "@/actions/user";
+import { getSession, logout } from "@/actions/auth";
+import { redirect } from "next/navigation";
 
 export default async function Home() {
-  const users = await getUsers();
+  const session = await getSession();
+
+  if (!session) {
+    redirect("/login");
+  }
+
+  async function handleLogout() {
+    "use server";
+    await logout();
+    redirect("/login");
+  }
 
   return (
     <main className="flex flex-col items-center p-24 space-y-10">
-      <h1 className="text-4xl font-bold">Users</h1>
+      <h1 className="text-4xl font-bold">Home</h1>
       <section className="space-y-5">
-        {users.map((user) => (
-          <div key={user.id}>
-            <p>{user.username}</p>
-            <p>{user.email}</p>
-            <p>{user.password}</p>
-            <p>{user.createdAt.toString()}</p>
-            <p>{user.updatedAt.toString()}</p>
-          </div>
-        ))}
+        <pre>{JSON.stringify(session, null, 2)}</pre>
       </section>
+      <form action={handleLogout}>
+        <button type="submit">Logout</button>
+      </form>
     </main>
   );
 }
