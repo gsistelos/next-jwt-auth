@@ -1,23 +1,27 @@
 import { redirect } from "next/navigation";
-import { getSession, login } from "@/actions/auth";
+import { createUser } from "@/actions/user";
 
-export default async function Login() {
-  const session = await getSession();
-
-  if (session) {
-    redirect("/");
-  }
-
-  async function handleLogin(formData: FormData) {
+export default async function Register() {
+  async function handleRegister(formData: FormData) {
     "use server";
-    await login(formData);
-    redirect("/");
+    await createUser(formData);
+    redirect("/login");
   }
 
   return (
     <main className="flex flex-col items-center p-24 space-y-10">
-      <h1 className="text-4xl font-bold">Login</h1>
-      <form className="flex flex-col space-y-5" action={handleLogin}>
+      <h1 className="text-4xl font-bold">Register</h1>
+      <form className="flex flex-col space-y-5" action={handleRegister}>
+        <div className="flex flex-col space-y-2">
+          <label htmlFor="username">Username</label>
+          <input
+            id="username"
+            className="text-black"
+            type="text"
+            name="username"
+            required
+          />
+        </div>
         <div className="flex flex-col space-y-2">
           <label htmlFor="email">Email</label>
           <input
@@ -38,7 +42,7 @@ export default async function Login() {
             required
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit">Register</button>
       </form>
     </main>
   );
