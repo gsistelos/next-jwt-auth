@@ -1,6 +1,7 @@
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
+import { getUserByEmail } from "@/actions/user";
 
 const jwtSecret = new TextEncoder().encode(process.env.JWT_SECRET);
 
@@ -22,7 +23,14 @@ export async function decrypt(input: string): Promise<any> {
 }
 
 export async function login(formData: FormData) {
-  const user = { email: formData.get("email"), name: "John" };
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  const user = await getUserByEmail(email);
+
+  if (!user || user.password !== password) {
+    throw new Error("Invalid email or password");
+  }
 
   const expires = new Date(Date.now() + expirationTime);
   const session = await encrypt({ user, expires });
