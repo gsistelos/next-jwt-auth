@@ -26,11 +26,11 @@ export async function decrypt(input: string): Promise<any> {
   return payload;
 }
 
-export async function register(formData: FormData) {
-  const username = formData.get("username") as string;
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-
+export async function register(
+  username: string,
+  email: string,
+  password: string,
+) {
   if (await getUserByEmail(email)) {
     throw new Error("Email already in use");
   }
@@ -42,10 +42,7 @@ export async function register(formData: FormData) {
   redirect("/login");
 }
 
-export async function login(formData: FormData) {
-  const email = formData.get("email") as string;
-  const password = formData.get("password") as string;
-
+export async function login(email: string, password: string) {
   const user = await getUserByEmail(email);
 
   if (!user || !comparePasswords(password, user.password)) {
