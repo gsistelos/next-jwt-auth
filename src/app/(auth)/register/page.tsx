@@ -8,6 +8,10 @@ export default function Register() {
 
   async function handleRegister(formData: FormData) {
     try {
+      if (formData.get("password") !== formData.get("confirm-password")) {
+        throw new Error("Passwords do not match");
+      }
+
       await register(formData);
     } catch (error: any) {
       setError(error.message);
@@ -49,6 +53,16 @@ export default function Register() {
             className="text-black"
             type="password"
             name="password"
+            required
+          />
+        </div>
+        <div className="flex flex-col space-y-2">
+          <label htmlFor="confirm-password">Confirm password</label>
+          <input
+            id="confirm-password"
+            className="text-black"
+            type="password"
+            name="confirm-password"
             required
           />
         </div>
