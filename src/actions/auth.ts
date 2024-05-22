@@ -4,9 +4,8 @@ import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 import { createUser, getUserByEmail } from "@/actions/user";
-import { comparePasswords } from "@/lib/password";
+import { hashPassword, comparePasswords } from "@/lib/utils";
 import { redirect } from "next/navigation";
-import { hashPassword } from "@/lib/password";
 
 const jwtSecret = new TextEncoder().encode(process.env.JWT_SECRET);
 
