@@ -32,6 +32,10 @@ export async function register(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
 
+  if (await getUserByEmail(email)) {
+    throw new Error("Email already in use");
+  }
+
   const hashedPassword = hashPassword(password);
 
   await createUser(username, email, hashedPassword);

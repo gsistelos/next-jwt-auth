@@ -1,10 +1,27 @@
-import { register } from "@/actions/auth";
+"use client";
 
-export default async function Register() {
+import { register } from "@/actions/auth";
+import { useState } from "react";
+
+export default function Register() {
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleRegister(formData: FormData) {
+    try {
+      await register(formData);
+    } catch (error: any) {
+      setError(error.message);
+    }
+  }
+
   return (
     <main className="flex flex-col items-center p-24 space-y-10">
       <h1 className="text-4xl font-bold">Register</h1>
-      <form className="flex flex-col space-y-5" action={register}>
+      <form
+        className="flex flex-col items-center space-y-5"
+        action={handleRegister}
+      >
+        {error && <p className="text-red-500">{error}</p>}
         <div className="flex flex-col space-y-2">
           <label htmlFor="username">Username</label>
           <input
