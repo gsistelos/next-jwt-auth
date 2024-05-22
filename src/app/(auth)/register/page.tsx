@@ -1,17 +1,10 @@
-import { redirect } from "next/navigation";
-import { createUser } from "@/actions/user";
+import { register } from "@/actions/auth";
 
 export default async function Register() {
-  async function handleRegister(formData: FormData) {
-    "use server";
-    await createUser(formData);
-    redirect("/login");
-  }
-
   return (
     <main className="flex flex-col items-center p-24 space-y-10">
       <h1 className="text-4xl font-bold">Register</h1>
-      <form className="flex flex-col space-y-5" action={handleRegister}>
+      <form className="flex flex-col space-y-5" action={register}>
         <div className="flex flex-col space-y-2">
           <label htmlFor="username">Username</label>
           <input

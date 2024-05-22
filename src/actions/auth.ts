@@ -1,8 +1,12 @@
+"use server";
+
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { getUserByEmail } from "@/actions/user";
+import { createUser, getUserByEmail } from "@/actions/user";
 import { comparePasswords } from "@/lib/password";
+import { redirect } from "next/navigation";
+import { hashPassword } from "@/lib/password";
 
 const jwtSecret = new TextEncoder().encode(process.env.JWT_SECRET);
 
@@ -23,6 +27,18 @@ export async function decrypt(input: string): Promise<any> {
   return payload;
 }
 
+export async function register(formData: FormData) {
+  const username = formData.get("username") as string;
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  const hashedPassword = hashPassword(password);
+
+  await createUser(username, email, hashedPassword);
+
+  redirect("/login");
+}
+
 export async function login(formData: FormData) {
   const email = formData.get("email") as string;
   const password = formData.get("password") as string;
@@ -37,10 +53,14 @@ export async function login(formData: FormData) {
   const session = await encrypt({ user, expires });
 
   cookies().set("session", session, { expires, httpOnly: true });
+
+  redirect("/");
 }
 
 export async function logout() {
   cookies().delete("session");
+
+  redirect("/login");
 }
 
 export async function getSession() {
