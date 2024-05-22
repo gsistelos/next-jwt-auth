@@ -1,10 +1,27 @@
-import { login } from "@/actions/auth";
+"use client";
 
-export default async function Login() {
+import { login } from "@/actions/auth";
+import { useState } from "react";
+
+export default function Login() {
+  const [error, setError] = useState<string | null>(null);
+
+  async function handleLogin(formData: FormData) {
+    try {
+      await login(formData);
+    } catch (error: any) {
+      setError(error.message);
+    }
+  }
+
   return (
     <main className="flex flex-col items-center p-24 space-y-10">
       <h1 className="text-4xl font-bold">Login</h1>
-      <form className="flex flex-col space-y-5" action={login}>
+      <form
+        className="flex flex-col items-center space-y-5"
+        action={handleLogin}
+      >
+        {error && <p className="text-red-500">{error}</p>}
         <div className="flex flex-col space-y-2">
           <label htmlFor="email">Email</label>
           <input
